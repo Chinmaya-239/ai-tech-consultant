@@ -1,0 +1,6 @@
+{"A": [["search", "present"], ["category", "present"], ["city", "present"], ["price", "present"], ["rating", "present"], ["mobile", "present"], ["AI", "present"],
+        ["800|2,000|growth", "constraint_or_req"], ["3000|three thousand", "constraint"], ["November 30", "constraint"]],
+ "B": [["checkout", "present"], ["guest", "present"], ["email", "present"], ["SMS", "present"], ["PayPal", "present"], ["Razorpay", "needs_clarification"],
+        ["refund", "present"], ["Stripe|existing", "feasibility_not_custom_ok"]],
+ "C": [["AI", "removed"], ["saved search|alert", "added"], ["map", "added_or_modified"], ["mobile", "modified_or_added"], ["December 15", "constraint"],
+        ["category", "unchanged"]]}

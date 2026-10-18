@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+beautifulsoup4
+lxml
+numpy
+anthropic
+pydantic>=2
+pytest

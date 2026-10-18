@@ -1,0 +1,8 @@
+.env
+.venv/
+node_modules/
+*.sqlite
+data/*.json
+!task2-inbox-agent/data/emails.jsonl
+__pycache__/
+*.csv

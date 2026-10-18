@@ -1,0 +1,19 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Inbox Review</title>
+<style>body{font:15px system-ui;max-width:1000px;margin:1.5rem auto;padding:0 1rem}.c{border:1px solid #ddd;border-radius:8px;padding:1rem;margin:.8rem 0}textarea{width:100%;height:130px}
+.t{display:inline-block;padding:2px 8px;border-radius:10px;background:#eee;font-size:12px;margin-right:4px}.h{background:#fdecea}.m{background:#fff4e5}.l{background:#e8f5e9}button{padding:.45rem .9rem;margin-right:.3rem}</style>
+<h1>Inbox Review</h1>
+<div class=c><b>Simulate incoming email</b><br><input id=sub placeholder=Subject style="width:60%"><textarea id=body></textarea><button onclick=send()>Process email</button><span id=st></span></div>
+<div class=c id=auto></div><div id=list></div>
+<script>
+const j=async(u,o)=>{const r=await fetch(u,o);const d=await r.json();if(!r.ok)throw new Error(d.error||r.status);return d};
+const P=b=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+async function send(){st.textContent=' working…';try{await j('/emails',P({subject:sub.value,body:body.value}));body.value='';st.textContent=''}catch(e){st.textContent=' Failed: '+e.message}load()}
+async function act(id,a){const t=document.getElementById('t'+id).value;const r=a==='approve'?'':prompt('Reason for change (optional)')||'';try{await j('/review/'+id,P({action:a,finalText:t,reason:r}))}catch(e){alert(e.message)}load()}
+async function tog(c,op){try{await j(`/autonomy/${c}/${op}`,P({}))}catch(e){alert(e.message)}load()}
+async function load(){const a=await j('/autonomy');auto.innerHTML='<b>Autonomy ('+a.threshold+' unedited in a row to become eligible)</b><br>'+Object.entries(a.categories).map(([c,s])=>`<span class=t>${c}: ${s.streak}/${a.threshold} ${s.enabled?'AUTO ON':s.eligible?'eligible':''}${s.disabledReason?' ('+s.disabledReason+')':''}</span> ${s.eligible&&!s.enabled?`<button onclick="tog('${c}','enable')">enable</button>`:''}${s.enabled?`<button onclick="tog('${c}','disable')">kill</button>`:''}`).join('<br>');
+ const l=await j('/inbox');list.innerHTML=l.map(i=>{const d=i.draft;return `<div class=c><span class="t ${i.classification.risk[0]}">${i.classification.category} · risk ${i.classification.risk}</span><span class=t>${i.state}${i.decision?' / '+i.decision:''}</span>${i.policyFlags.map(f=>`<span class="t h">⚠ ${f}</span>`).join('')}
+ <h4>${i.email.subject}</h4><p>${i.email.body}</p>${i.state==='kb_unavailable'?'<p class="t h">Knowledge service unavailable - no draft was generated. Reply manually.</p>':''}
+ ${i.kb&&i.kb.status==='answered'?`<details><summary>Evidence (${i.kb.sources.length} sources)</summary>${i.kb.answer}<br>${i.kb.sources.map(s=>`<a href="${s.url}" target=_blank>${s.title}</a>`).join(' · ')}</details>`:i.kb?`<small>Knowledge: ${i.kb.status}</small>`:''}
+ ${['sent','rejected'].includes(i.state)?`<pre style="white-space:pre-wrap">${i.final}</pre>`:`<textarea id=t${i.id}>${d?d.reply:''}</textarea><br><button onclick="act('${i.id}','approve')">Approve & send (as shown)</button><button onclick="act('${i.id}','reject')">Send my edited version as replacement (reject draft)</button><button onclick="act('${i.id}','expert')">Needs expert</button>`}</div>`}).join('')}
+load()
+</script>

@@ -1,0 +1,20 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Knowledge Chat</title>
+<style>body{font:16px system-ui;max-width:760px;margin:2rem auto;padding:0 1rem;color:#222}input{width:100%;padding:.7rem;font-size:1rem}
+button{padding:.6rem 1rem;margin-top:.5rem}.card{border:1px solid #ddd;border-radius:8px;padding:1rem;margin-top:1rem}.warn{background:#fff4e5}.err{background:#fdecea}
+img{max-width:220px;margin:4px;border:1px solid #ccc}small{color:#666}</style>
+<h1>Knowledge Chat</h1>
+<input id=k placeholder="API key" value="dev-key"><input id=q placeholder="Ask about the product..." style="margin-top:.5rem">
+<button onclick=ask()>Ask</button> <button onclick=ingest()>Run ingestion (20 pages)</button> <small id=st></small><div id=out></div>
+<script>
+const H=()=>({'Content-Type':'application/json','X-API-Key':k.value});
+async function ask(){out.innerHTML='<div class=card>Thinking…</div>';
+ try{const r=await fetch('/query',{method:'POST',headers:H(),body:JSON.stringify({question:q.value})});
+ if(!r.ok){out.innerHTML=`<div class="card err">Error ${r.status}: ${await r.text()}</div>`;return}
+ const d=await r.json();
+ if(d.status!=='answered'){out.innerHTML=`<div class="card warn"><b>I don't have enough information to answer this.</b><br>A human expert task was created (#${d.escalation_id}). ${d.uncertainty||''}</div>`;return}
+ out.innerHTML=`<div class=card>${d.answer.replace(/\n/g,'<br>')}${d.uncertainty?`<p><small>Uncertainty: ${d.uncertainty}</small></p>`:''}<hr><b>Sources</b><ul>${d.sources.map(s=>`<li><a href="${s.url}" target=_blank>${s.title}</a> <small>${s.kind}${s.heading?' · '+s.heading:''}</small><br>${s.images.map(i=>`<img src="${i}">`).join('')}</li>`).join('')}</ul></div>`
+ }catch(e){out.innerHTML=`<div class="card err">Knowledge service unavailable: ${e}</div>`}}
+async function ingest(){await fetch('/ingestion/run',{method:'POST',headers:H(),body:JSON.stringify({limit:20})});poll()}
+async function poll(){const r=await fetch('/ingestion/status',{headers:H()});const d=await r.json();st.textContent=`${d.running?'running ':'idle '}${JSON.stringify(d.progress)} chunks=${d.chunks}`;if(d.running)setTimeout(poll,2000)}
+</script>

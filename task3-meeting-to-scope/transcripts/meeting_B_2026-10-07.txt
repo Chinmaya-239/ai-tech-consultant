@@ -1,0 +1,14 @@
+CONSULTANT: Hi Dev, you run an online store on the platform, right?
+DEV: Yes, handmade furniture. Checkout is too long. Customers abandon at the address step.
+CONSULTANT: What change do you want?
+DEV: Fewer steps, guest checkout, and the address autofilled if possible.
+CONSULTANT: Anything on notifications?
+DEV: Order confirmation emails are plain. We want branded emails, and an SMS when the order ships.
+CONSULTANT: Payments?
+DEV: We use Stripe now. We want PayPal as well. And I heard Razorpay works better for India. Can we use that?
+CONSULTANT: I'll need to check what the platform supports for Razorpay. Do you have a PayPal business account?
+DEV: Not yet, my accountant is setting it up.
+CONSULTANT: Budget and timing?
+DEV: Budget is flexible up to five thousand. We want it before January 15th.
+CONSULTANT: Any hard requirement?
+DEV: Checkout must not break existing orders. And I need a refund button for partial refunds.

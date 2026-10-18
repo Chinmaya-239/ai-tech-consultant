@@ -1,0 +1,12 @@
+CONSULTANT: Maria, thanks for the follow-up. Anything changed since the first meeting on the directory search?
+MARIA: A few things. First, forget the AI search idea. Raj says it's overkill for 800 listings, so drop it.
+CONSULTANT: Understood, we'll remove it. Anything to add?
+MARIA: Yes, new one. Customers should be able to save a search and get an email alert when a new provider matches. That's important now.
+CONSULTANT: Noted as a new request. On the mobile side?
+MARIA: Instead of just a better list, I'd like a map view on mobile showing providers nearby. The list should still be readable.
+CONSULTANT: And the filters?
+MARIA: Same as before, category, city and price. Rating is still a maybe.
+CONSULTANT: Timeline?
+MARIA: Because of the extra work, December 15th is fine instead of November 30th. Budget stays at three thousand though.
+CONSULTANT: With the saved-search alerts and map view, we may need to quote extra. I'll flag it.
+MARIA: Fine, send me the revised proposal.

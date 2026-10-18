@@ -1,0 +1,16 @@
+CONSULTANT: Thanks for joining, Maria. Tell me what's not working on the CityPros directory.
+MARIA: Search is bad. Customers type "plumber" and get random stuff. We want them to find providers faster, and some filters would help.
+CONSULTANT: Which filters?
+MARIA: By category, by city, and by price range. Maybe rating too, but that's less important.
+CONSULTANT: How many listings do you have today?
+MARIA: About 800 providers, growing to maybe 2,000 next year.
+CONSULTANT: And mobile?
+MARIA: Mobile is clunky. The search results list is hard to read on a phone and the filter menu is tiny. Most of our traffic is mobile.
+CONSULTANT: Anything else?
+MARIA: Maybe add AI to the search? My nephew says everyone does that now. I'm not sure what it would do.
+CONSULTANT: What's your budget and deadline?
+MARIA: Around three thousand dollars. I'd like it live by November 30th, before the holiday rush.
+CONSULTANT: Who approves the work on your side?
+MARIA: Me. And my developer, Raj, can give you server access.
+CONSULTANT: What does success look like?
+MARIA: People find a provider in under a minute and stop emailing us that they can't find anyone.

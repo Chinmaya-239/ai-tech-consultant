@@ -98,7 +98,8 @@ async def describe_images(client: httpx.AsyncClient, imgs: list[dict]) -> list[t
             ct = r.headers.get("content-type", "").split(";")[0]
             if r.status_code == 200 and ct in ("image/png", "image/jpeg", "image/gif", "image/webp") and len(r.content) < 4_500_000:
                 d = await asyncio.to_thread(llm.describe_image, base64.b64encode(r.content).decode(), ct, im["context"] or im["alt"])
-                res.append((im, d))
+                if d:
+                    res.append((im, d))
         except Exception:
             continue                                      # one bad image never fails the page
     return res

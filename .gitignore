@@ -6,3 +6,6 @@ data/*.json
 !task2-inbox-agent/data/emails.jsonl
 __pycache__/
 *.csv
+
+task3-meeting-to-scope/data/
+task2-inbox-agent/data/store.json

@@ -1,4 +1,4 @@
-<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Scope Builder</title>
+﻿<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Scope Builder</title>
 <style>body{font:15px system-ui;max-width:980px;margin:2rem auto;padding:0 1rem}textarea{width:100%;height:140px}.c{border:1px solid #ddd;border-radius:8px;padding:1rem;margin:1rem 0}
 .added{background:#e8f5e9}.removed{background:#fdecea;text-decoration:line-through}.modified{background:#fff8e1}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:4px 8px}.b{padding:.5rem 1rem}</style>
 <h1>Scope Builder</h1>
@@ -9,17 +9,18 @@
 const j=async(u,o)=>{const r=await fetch(u,o);if(!r.ok)throw new Error(await r.text());return r.json()};
 const P=(m,b)=>({method:m,headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
 async function list(){const l=await j('/projects');pid.innerHTML=l.map(p=>`<option value=${p.id}>${p.name}</option>`).join('')}
-async function mk(){const p=await j('/projects',P('POST',{name:name.value}));await list();pid.value=p.id}
-async function run(){st.textContent='Running agents… (can take a minute)';try{await j(`/projects/${pid.value}/meetings`,P('POST',{transcript:tx.value,date:date.value,label:label.value}));st.textContent='';load()}catch(e){st.textContent='Failed: '+e.message}}
+async function mk(){const p=await j('/projects',P('POST',{name:document.getElementById('name').value}));await list();pid.value=p.id}
+async function run(){st.textContent='Running agentsâ€¦ (can take a minute)';try{await j(`/projects/${pid.value}/meetings`,P('POST',{transcript:tx.value,date:date.value,label:label.value}));st.textContent='';load()}catch(e){st.textContent='Failed: '+e.message}}
 async function appr(v){const r=prompt('Reviewer name');if(r){await j(`/projects/${pid.value}/versions/${v}/approve`,P('POST',{reviewer:r}));load()}}
 async function snd(v){try{await j(`/projects/${pid.value}/versions/${v}/send`,P('POST',{}));alert('Sent (simulated)');load()}catch(e){alert('Blocked: '+e.message)}}
 async function load(){if(!pid.value)return;const p=await j('/projects/'+pid.value);
- out.innerHTML=p.versions.slice().reverse().map(v=>`<div class=c><h2>Version ${v.version} — ${v.status} <small>(${v.meeting})</small></h2>
+ out.innerHTML=p.versions.slice().reverse().map(v=>`<div class=c><h2>Version ${v.version} â€” ${v.status} <small>(${v.meeting})</small></h2>
  <button class=b onclick=appr(${v.version})>Approve</button> <button class=b onclick=snd(${v.version})>Send to client</button>
- ${v.change_report?`<h3>Changes vs approved baseline v${v.based_on_baseline??'—'}</h3><p>Added: ${v.change_report.added.length} · Modified: ${v.change_report.modified.length} · Removed: ${v.change_report.removed.length}</p>`:''}
+ ${v.change_report?`<h3>Changes vs approved baseline v${v.based_on_baseline??'â€”'}</h3><p>Added: ${v.change_report.added.length} Â· Modified: ${v.change_report.modified.length} Â· Removed: ${v.change_report.removed.length}</p>`:''}
  <h3>Requirements</h3><table><tr><th>ID</th><th>Requirement</th><th>Status</th><th>Product check</th><th>Change</th></tr>${v.requirements.map(r=>`<tr class=${r.change}><td>${r.id}</td><td>${r.description}</td><td>${r.status} (${r.origin})</td><td>${r.feasibility?r.feasibility.classification:''}</td><td>${r.change}</td></tr>`).join('')}</table>
- <h3>Estimate</h3><p>${v.estimate.totals.low}–${v.estimate.totals.high} h (likely ${v.estimate.totals.likely}) · ${v.estimate.currency} ${v.estimate.price_range.low}–${v.estimate.price_range.high} <small>${v.estimate.note}</small></p>
+ <h3>Estimate</h3><p>${v.estimate.totals.low}â€“${v.estimate.totals.high} h (likely ${v.estimate.totals.likely}) Â· ${v.estimate.currency} ${v.estimate.price_range.low}â€“${v.estimate.price_range.high} <small>${v.estimate.note}</small></p>
  <details><summary>Scope of work</summary><pre style="white-space:pre-wrap">${v.scope_md}</pre></details>
- <details><summary>Proposal ${v.proposal.review_issues.length?'⚠ '+v.proposal.review_issues.length+' review issue(s)':''}</summary><pre style="white-space:pre-wrap">${v.proposal.markdown}</pre><ul>${v.proposal.review_issues.map(i=>`<li>${i}</li>`).join('')}</ul></details></div>`).join('')}
+ <details><summary>Proposal ${v.proposal.review_issues.length?'âš  '+v.proposal.review_issues.length+' review issue(s)':''}</summary><pre style="white-space:pre-wrap">${v.proposal.markdown}</pre><ul>${v.proposal.review_issues.map(i=>`<li>${i}</li>`).join('')}</ul></details></div>`).join('')}
 list().then(load)
 </script>
+

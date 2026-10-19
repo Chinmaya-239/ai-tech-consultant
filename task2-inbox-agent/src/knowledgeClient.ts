@@ -1,5 +1,5 @@
-import type { KbResult } from "./types.js";
-const KB_URL = process.env.KB_URL ?? "http://localhost:8001";
+﻿import type { KbResult } from "./types.js";
+const KB_URL = process.env.KB_URL ?? "http://127.0.0.1:8001";
 const KB_KEY = process.env.KB_API_KEY ?? "dev-key";
 
 /** Typed client for Task 1's HTTP API. Never throws; never invents an answer when the service fails. */
@@ -13,3 +13,4 @@ export async function askKnowledge(question: string, requestId: string, timeoutM
     return { status: "insufficient_evidence", escalation_id: d.escalation_id ?? null };
   } catch (e) { return { status: "kb_unavailable", error: String(e) }; }
 }
+

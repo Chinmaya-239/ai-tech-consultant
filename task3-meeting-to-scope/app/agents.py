@@ -1,4 +1,4 @@
-"""One job per agent. Each has a versioned prompt, a JSON output contract, and a code-level validation step."""
+﻿"""One job per agent. Each has a versioned prompt, a JSON output contract, and a code-level validation step."""
 import os, json
 from . import llm, kb_client
 PROMPT_VERSION = "scope-v1"
@@ -16,7 +16,7 @@ def windows(numbered: str, size=6000, overlap=3) -> list[str]:
 
 # 1. Transcript Analyst ------------------------------------------------------
 ANALYST = """You are a senior software consultant reading part of a client meeting transcript (lines tagged [Lnn]).
-Extract ONLY what is said. Separate explicit client requests from your inferences. Do not invent numbers, dates or prices.
+Extract ONLY what is said. Separate explicit client requests from your inferences. Do not invent numbers, dates or prices. Deadlines and budgets belong ONLY in constraints, never in requirements.
 Schema: {"requirements":[{"description":str,"origin":"explicit"|"inferred","status":"confirmed"|"unclear"|"disputed",
 "priority":"must"|"should"|"optional","evidence_lines":[int],"open_questions":[str]}],
 "decisions":[{"text":str,"lines":[int]}],"constraints":[{"type":"budget"|"deadline"|"other","text":str,"lines":[int]}],
@@ -100,3 +100,13 @@ def change_report(reqs: list[dict]) -> dict:
     g = lambda k: [{"id": r["id"], "description": r["description"], "detail": r.get("what_changed")} for r in reqs if r.get("change") == k]
     return {"added": g("added"), "modified": g("modified"), "removed": g("removed"),
             "potentially_out_of_scope": [dict(a, action="Not in approved baseline: clarify and quote separately") for a in g("added")]}
+
+# 7. Constraint comparison vs APPROVED baseline -------------------------------------
+def compare_constraints(old: list[dict], new: list[dict]) -> list[dict]:
+    if not new: return []
+    r = llm.ask_json("""Compare CLIENT CONSTRAINTS (budget, deadline, other) from the approved baseline with those from the latest meeting.
+Report only real changes or conflicts and quote both values. Do not invent values or convert currencies.
+Schema {"changes":[{"type":"budget"|"deadline"|"other","before":str|null,"after":str,"severity":"conflict"|"changed"|"new","note":str}]}""",
+                     json.dumps({"baseline": old, "latest": new}), llm.SMART, 1500)
+    return r.get("changes", [])
+
